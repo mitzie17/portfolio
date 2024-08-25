@@ -1,1 +1,14 @@
 export { default as Home } from "./Home";
+export { default as Explore } from "./Explore";
+export { default as CreateProject } from "./CreateProject";
+export { default as EditProject } from "./EditProject";
+export { default as ProjectDetails } from "./ProjectDetails";
+export { default as CreateExperience } from "./CreateExperience";
+export { default as EditExperience } from "./EditExperience";
+export { default as ExperienceDetails } from "./ExperienceDetails";
+export { default as CreateSkill } from "./CreateSkill";
+export { default as EditSkill } from "./EditSkill";
+export { default as SkillDetails } from "./SkillDetails";
+export { default as Profile } from "./Profile";
+export { default as UpdateProfile } from "./UpdateProfile";
+export { default as AllUsers } from "./AllUsers";
