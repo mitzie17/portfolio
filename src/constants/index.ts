@@ -39,12 +39,12 @@ export const bottombarLinks = [
   },
   {
     imgURL: "/assets/icons/bookmark.svg",
-    route: "/saved",
-    label: "Saved",
+    route: "/create-experience",
+    label: "Add Experience",
   },
   {
     imgURL: "/assets/icons/gallery-add.svg",
-    route: "/create-post",
-    label: "Create",
+    route: "/create-project",
+    label: "Add Project",
   },
 ];
