@@ -16,12 +16,20 @@ import { Textarea } from "../ui/textarea";
 import FileUploader from "../shared/FileUploader";
 import { ProjectValidationSchema } from "@/lib/validation";
 import { Models } from "appwrite";
+import { useUserContext } from "@/context/AuthContext";
+import { useToast } from "../ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 type ProjectFormProps = {
   project?: Models.Document;
 };
 
 const ProjectForm = ({ project }: ProjectFormProps) => {
+  const { mutateAsync: createProject, isPending: isLoadingCreate } =
+    useCreateProject();
+  const { user } = useUserContext();
+  const { toast } = useToast();
+  const navigate = useNavigate();
   // 1. Define your form.
   const form = useForm<z.infer<typeof ProjectValidationSchema>>({
     resolver: zodResolver(ProjectValidationSchema),
@@ -34,10 +42,19 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof ProjectValidationSchema>) {
+  async function onSubmit(values: z.infer<typeof ProjectValidationSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values);
+
+    const newProject = await createProject({
+      ...values,
+      userId: user.id,
+    });
+
+    if (!newProject) {
+      toast({ title: "Please try again." });
+    }
+    navigate("/");
   }
 
   return (
