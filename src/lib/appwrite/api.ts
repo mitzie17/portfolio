@@ -111,6 +111,36 @@ export async function createProject(project: INewProject) {
     if (!uploadedFile) throw Error;
 
     // Get file url
+    const fileUrl = getFilePreview(uploadedFile.$id);
+
+    if (!fileUrl) {
+      deleteFile(uploadedFile.$id);
+      throw Error;
+    }
+
+    // Convert tags in array
+    const tags = project.tags?.replace(/ /g, "").split(",") || [];
+
+    // Save project to database
+    const newProject = await databases.createDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.projectCollectionId,
+      ID.unique(),
+      {
+        creator: project.userId,
+        title: project.title,
+        imageUrl: fileUrl,
+        imageId: uploadedFile.$id,
+        description: project.description,
+        tags: tags,
+      }
+    );
+
+    if (!newProject) {
+      await deleteFile(uploadedFile.$id);
+    }
+
+    return newProject;
   } catch (error) {
     console.log(error);
   }
@@ -124,6 +154,33 @@ export async function uploadFile(file: File) {
       file
     );
     return uploadedFile;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getFilePreview(fileId: string) {
+  try {
+    const fileUrl = storage.getFilePreview(
+      appwriteConfig.storageId,
+      fileId,
+      2000,
+      2000,
+      "top",
+      100
+    );
+
+    return fileUrl;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deleteFile(fileId: string) {
+  try {
+    await storage.deleteFile(appwriteConfig.storageId, fileId);
+
+    return { status: "ok" };
   } catch (error) {
     console.log(error);
   }
