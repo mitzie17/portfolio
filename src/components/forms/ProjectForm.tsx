@@ -19,6 +19,7 @@ import { Models } from "appwrite";
 import { useUserContext } from "@/context/AuthContext";
 import { useToast } from "../ui/use-toast";
 import { useNavigate } from "react-router-dom";
+import { useCreateProjectMutation } from "@/lib/react-query/queriesAndMutations";
 
 type ProjectFormProps = {
   project?: Models.Document;
@@ -26,7 +27,7 @@ type ProjectFormProps = {
 
 const ProjectForm = ({ project }: ProjectFormProps) => {
   const { mutateAsync: createProject, isPending: isLoadingCreate } =
-    useCreateProject();
+    useCreateProjectMutation();
   const { user } = useUserContext();
   const { toast } = useToast();
   const navigate = useNavigate();
