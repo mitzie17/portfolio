@@ -7,6 +7,7 @@ import {
 import {
   createProject,
   createUserAccount,
+  getRecentProjects,
   signInAccount,
   signOutAccount,
 } from "../appwrite/api";
@@ -41,5 +42,12 @@ export const useCreateProjectMutation = () => {
         queryKey: [QUERY_KEYS.GET_RECENT_PROJECTS],
       });
     },
+  });
+};
+
+export const useGetRecentProjectsMutation = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_RECENT_PROJECTS],
+    queryFn: getRecentProjects,
   });
 };
