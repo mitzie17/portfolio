@@ -185,3 +185,15 @@ export async function deleteFile(fileId: string) {
     console.log(error);
   }
 }
+
+export async function getRecentProjects() {
+  const projects = await databases.listDocuments(
+    appwriteConfig.databaseId,
+    appwriteConfig.projectCollectionId,
+    [Query.orderDesc("$createdAt"), Query.limit(20)]
+  );
+
+  if (!projects) throw Error;
+
+  return projects;
+}
