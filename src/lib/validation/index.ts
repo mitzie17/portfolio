@@ -19,6 +19,6 @@ export const SigninValidationSchema = z.object({
 export const ProjectValidationSchema = z.object({
   title: z.string().min(5).max(100),
   file: z.custom<File[]>(),
-  description: z.string().min(5).max(5000),
+  responsibilities: z.string().min(5).max(5000),
   tags: z.string(),
 });
