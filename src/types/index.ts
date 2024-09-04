@@ -26,7 +26,7 @@ export type INewProject = {
   userId: string;
   title: string;
   file: File[];
-  description?: string;
+  responsibilities?: string;
   tags?: string;
 };
 
@@ -36,7 +36,7 @@ export type IUpdateProject = {
   imageId: string;
   imageUrl: URL;
   file: File[];
-  description?: string;
+  responsibilities?: string;
   tags?: string;
 };
 
