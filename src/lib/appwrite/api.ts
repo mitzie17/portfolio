@@ -105,7 +105,7 @@ export async function signOutAccount() {
 
 export async function createProject(project: INewProject) {
   try {
-    // Upload image to storage
+    // Upload image to appwrite storage
     const uploadedFile = await uploadFile(project.file[0]);
 
     if (!uploadedFile) throw Error;
@@ -114,14 +114,14 @@ export async function createProject(project: INewProject) {
     const fileUrl = getFilePreview(uploadedFile.$id);
 
     if (!fileUrl) {
-      deleteFile(uploadedFile.$id);
+      await deleteFile(uploadedFile.$id);
       throw Error;
     }
 
     // Convert tags in array
     const tags = project.tags?.replace(/ /g, "").split(",") || [];
 
-    // Save project to database
+    // Create project in database
     const newProject = await databases.createDocument(
       appwriteConfig.databaseId,
       appwriteConfig.projectCollectionId,
@@ -131,13 +131,14 @@ export async function createProject(project: INewProject) {
         title: project.title,
         imageUrl: fileUrl,
         imageId: uploadedFile.$id,
-        description: project.description,
+        responsibilities: project.responsibilities,
         tags: tags,
       }
     );
 
     if (!newProject) {
       await deleteFile(uploadedFile.$id);
+      throw Error;
     }
 
     return newProject;
@@ -159,7 +160,7 @@ export async function uploadFile(file: File) {
   }
 }
 
-export async function getFilePreview(fileId: string) {
+export function getFilePreview(fileId: string) {
   try {
     const fileUrl = storage.getFilePreview(
       appwriteConfig.storageId,
@@ -169,6 +170,7 @@ export async function getFilePreview(fileId: string) {
       "top",
       100
     );
+    if (!fileUrl) throw Error;
 
     return fileUrl;
   } catch (error) {
