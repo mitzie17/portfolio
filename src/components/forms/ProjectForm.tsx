@@ -37,7 +37,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
     defaultValues: {
       title: project ? project?.title : "",
       file: [],
-      description: project ? project?.description : "",
+      responsibilities: project ? project?.responsibilities : "",
       tags: project ? project.tags.join(",") : "",
     },
   });
@@ -80,10 +80,12 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
 
         <FormField
           control={form.control}
-          name="description"
+          name="responsibilities"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="shad-form_label">Description</FormLabel>
+              <FormLabel className="shad-form_label">
+                Responsibilities
+              </FormLabel>
               <FormControl>
                 <Textarea
                   className="shad-textarea custom-scrollbar"
