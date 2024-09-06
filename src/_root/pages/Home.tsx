@@ -1,4 +1,5 @@
 import Loader from "@/components/shared/Loader";
+import ProjectCard from "@/components/shared/ProjectCard";
 import { useGetRecentProjectsMutation } from "@/lib/react-query/queriesAndMutations";
 import { Models } from "appwrite";
 
@@ -19,7 +20,7 @@ export const Home = () => {
           ) : (
             <ul className="flex flex-col flex-1 gap-9 w-full">
               {projects?.documents.map((project: Models.Document) => (
-                <li key={project.$id}>{project.title}</li>
+                <ProjectCard project={project} />
               ))}
             </ul>
           )}
