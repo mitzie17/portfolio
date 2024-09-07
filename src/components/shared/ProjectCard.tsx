@@ -1,3 +1,5 @@
+import { useUserContext } from "@/context/AuthContext";
+import { multiFormatDateString } from "@/lib/utils";
 import { Models } from "appwrite";
 import { Link } from "react-router-dom";
 
@@ -6,6 +8,10 @@ type ProjectCardProps = {
 };
 
 const ProjectCard = ({ project }: ProjectCardProps) => {
+  const { user } = useUserContext();
+
+  if (!project.creator) return;
+
   return (
     <div className="post-card">
       <div className="flex-between">
@@ -27,12 +33,38 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
             </p>
             <div className="flex-center gap-2 text-light-3">
               <p className="subtle-semibold lg:small-regular">
-                {project.$createdAt}
+                {multiFormatDateString(project.$createdAt)}
               </p>
             </div>
           </div>
         </div>
+
+        <Link
+          to={`/update-project/${project.$id}`}
+          className={`${user.id !== project.creator.$id && "hidden"}`}
+        >
+          <img src="/assets/icons/edit.svg" alt="edit" width={20} height={20} />
+        </Link>
       </div>
+
+      <Link to={`/projects/${project.$id}`}>
+        <div className="small-medium lg:base-medium py-5">
+          <p>{project.title}</p>
+          <ul className="flex gap-1 mt-2">
+            {project.tags.map((tag: string) => (
+              <li key={tag} className="text-light-3">
+                #{tag}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <img
+          src={project.imageUrl || "/assets/icons/profile-placeholder.svg"}
+          className="post-card_img"
+          alt="project image"
+        />
+      </Link>
     </div>
   );
 };
