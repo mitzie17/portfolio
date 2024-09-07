@@ -20,7 +20,7 @@ export const Home = () => {
           ) : (
             <ul className="flex flex-col flex-1 gap-9 w-full">
               {projects?.documents.map((project: Models.Document) => (
-                <ProjectCard project={project} />
+                <ProjectCard project={project} key={project.$id} />
               ))}
             </ul>
           )}
