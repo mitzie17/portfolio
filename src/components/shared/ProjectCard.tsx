@@ -2,6 +2,7 @@ import { useUserContext } from "@/context/AuthContext";
 import { multiFormatDateString } from "@/lib/utils";
 import { Models } from "appwrite";
 import { Link } from "react-router-dom";
+import ProjectStats from "./ProjectStats";
 
 type ProjectCardProps = {
   project: Models.Document;
@@ -11,7 +12,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
   const { user } = useUserContext();
 
   if (!project.creator) return;
-
+  console.log(project.responsibilities);
   return (
     <div className="post-card">
       <div className="flex-between">
@@ -50,6 +51,8 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
       <Link to={`/projects/${project.$id}`}>
         <div className="small-medium lg:base-medium py-5">
           <p>{project.title}</p>
+          <p className="text-light-2 mt-3">{project.responsibilities}</p>
+
           <ul className="flex gap-1 mt-2">
             {project.tags.map((tag: string) => (
               <li key={tag} className="text-light-3">
@@ -65,6 +68,8 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
           alt="project image"
         />
       </Link>
+
+      <ProjectStats project={project} userId={user.id} />
     </div>
   );
 };
