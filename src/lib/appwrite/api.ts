@@ -199,3 +199,19 @@ export async function getRecentProjects() {
 
   return projects;
 }
+
+export async function likeProject(projectId: string, likesArray: string[]) {
+  try {
+    const updatedProject = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.projectCollectionId,
+      projectId,
+      { likes: likesArray }
+    );
+    if (!updatedProject) throw Error;
+
+    return updatedProject;
+  } catch (error) {
+    console.log(error);
+  }
+}
