@@ -51,7 +51,6 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
       <Link to={`/projects/${project.$id}`}>
         <div className="small-medium lg:base-medium py-5">
           <p>{project.title}</p>
-          <p className="text-light-2 mt-3">{project.responsibilities}</p>
 
           <ul className="flex gap-1 mt-2">
             {project.tags.map((tag: string) => (
@@ -60,6 +59,8 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
               </li>
             ))}
           </ul>
+
+          <p className="text-light-4 mt-1 text-center">Read more ＋</p>
         </div>
 
         <img
