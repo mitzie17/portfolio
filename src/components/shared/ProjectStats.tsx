@@ -1,4 +1,7 @@
+import { useUserContext } from "@/context/AuthContext";
+import { useLikeProject } from "@/lib/react-query/queriesAndMutations";
 import { Models } from "appwrite";
+import { useState, useEffect } from "react";
 
 type ProjectStatsProps = {
   project: Models.Document;
@@ -6,9 +9,16 @@ type ProjectStatsProps = {
 };
 
 const ProjectStats = ({ project, userId }: ProjectStatsProps) => {
+  const likesList = project.likes.map((user: Models.Document) => user.$id);
+  const [likes, setLikes] = useState(likesList);
+
+  const { mutate: likeProject } = useLikeProject();
+
+  const { data: currentUser } = useUserContext();
+
   return (
     <div className="flex justify-between items-center z-20">
-      <div className="flex gap-2 mr-5">
+      <div className="flex gap-2 ">
         <img
           src="/assets/icons/like.svg"
           alt="like"
@@ -17,7 +27,7 @@ const ProjectStats = ({ project, userId }: ProjectStatsProps) => {
           onClick={() => {}}
           className="cursor-pointer"
         />
-        <p className="small-medium lg:base-medium">0</p>
+        <p className="small-medium lg:base-medium">80</p>
       </div>
     </div>
   );
