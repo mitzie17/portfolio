@@ -12,7 +12,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
   const { user } = useUserContext();
 
   if (!project.creator) return;
-  console.log(project.responsibilities);
+
   return (
     <div className="post-card">
       <div className="flex-between">
