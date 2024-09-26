@@ -5,9 +5,9 @@ import { useEffect } from "react";
 import { useUserContext } from "@/context/AuthContext";
 
 const Topbar = () => {
-  const { mutate: signOut, isSuccess } = useSignOutAccountMutation();
   const navigate = useNavigate();
   const { user } = useUserContext();
+  const { mutate: signOut, isSuccess } = useSignOutAccountMutation();
 
   useEffect(() => {
     if (isSuccess) navigate(0);
