@@ -1,6 +1,6 @@
+import { ID, Query } from "appwrite";
 import { INewProject, INewUser } from "@/types";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
-import { ID, Query } from "appwrite";
 
 export async function createUserAccount(user: INewUser) {
   try {
@@ -208,6 +208,7 @@ export async function likeProject(projectId: string, likesArray: string[]) {
       projectId,
       { likes: likesArray }
     );
+
     if (!updatedProject) throw Error;
 
     return updatedProject;
