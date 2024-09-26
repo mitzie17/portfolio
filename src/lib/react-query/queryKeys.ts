@@ -10,7 +10,7 @@ export enum QUERY_KEYS {
   GET_USERS = "getUsers",
   GET_USER_BY_ID = "getUserById",
 
-  // POST KEYS
+  // PROJECT KEYS
   GET_PROJECTS = "getProjects",
   GET_INFINITE_PROJECTS = "getInfiniteProjects",
   GET_RECENT_PROJECTS = "getRecentProjects",
