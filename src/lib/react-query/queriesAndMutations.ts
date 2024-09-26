@@ -1,20 +1,15 @@
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  useInfiniteQuery,
-} from "@tanstack/react-query";
+import { INewProject, INewUser } from "@/types";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   createProject,
   createUserAccount,
+  getCurrentUser,
   getRecentProjects,
   likeProject,
   signInAccount,
   signOutAccount,
 } from "../appwrite/api";
-import { INewProject, INewUser } from "@/types";
 import { QUERY_KEYS } from "./queryKeys";
-import { LucideArrowUpRightFromSquare } from "lucide-react";
 
 export const useCreateUserAccountMutation = () => {
   return useMutation({
@@ -54,7 +49,7 @@ export const useGetRecentProjectsMutation = () => {
   });
 };
 
-export const useLikeProject = () => {
+export const useLikeProjectMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -79,5 +74,12 @@ export const useLikeProject = () => {
         queryKey: [QUERY_KEYS.GET_CURRENT_USER],
       });
     },
+  });
+};
+
+export const useGetCurrentUser = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_CURRENT_USER],
+    queryFn: getCurrentUser,
   });
 };
