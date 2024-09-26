@@ -16,7 +16,7 @@ const CreateProject = () => {
           </h2>
         </div>
 
-        <ProjectForm />
+        <ProjectForm action="Create" />
       </div>
     </div>
   );
