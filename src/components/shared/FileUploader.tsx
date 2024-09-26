@@ -3,13 +3,13 @@ import { FileWithPath, useDropzone } from "react-dropzone";
 import { Button } from "../ui/button";
 
 type FileUploaderProps = {
-  fieldChange: (files: File[]) => void;
+  fieldChange: (FILES: File[]) => void;
   mediaUrl: string;
 };
 
 const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
   const [file, setFile] = useState<File[]>([]);
-  const [fileUrl, setFileUrl] = useState<string>(mediaUrl);
+  const [fileUrl, setFileUrl] = useState(mediaUrl);
 
   const onDrop = useCallback(
     (acceptedFiles: FileWithPath[]) => {
@@ -20,6 +20,7 @@ const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
     },
     [file]
   );
+
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
@@ -48,7 +49,6 @@ const FileUploader = ({ fieldChange, mediaUrl }: FileUploaderProps) => {
             height={77}
             alt="file-upload"
           />
-
           <h3 className="base-medium text-light-2 mb-2 mt-6">
             Drag image here
           </h3>
