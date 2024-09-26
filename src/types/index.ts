@@ -31,7 +31,7 @@ export type INewProject = {
 };
 
 export type IUpdateProject = {
-  postId: string;
+  projectId: string;
   title: string;
   imageId: string;
   imageUrl: URL;
