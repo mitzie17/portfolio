@@ -23,14 +23,17 @@ import { useCreateProjectMutation } from "@/lib/react-query/queriesAndMutations"
 
 type ProjectFormProps = {
   project?: Models.Document;
+  action: "Create" | "Update";
 };
 
-const ProjectForm = ({ project }: ProjectFormProps) => {
+const ProjectForm = ({ project, action }: ProjectFormProps) => {
+  const { toast } = useToast();
+  const { user } = useUserContext();
+  const navigate = useNavigate();
+
   const { mutateAsync: createProject, isPending: isLoadingCreate } =
     useCreateProjectMutation();
-  const { user } = useUserContext();
-  const { toast } = useToast();
-  const navigate = useNavigate();
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof ProjectValidationSchema>>({
     resolver: zodResolver(ProjectValidationSchema),
@@ -38,7 +41,7 @@ const ProjectForm = ({ project }: ProjectFormProps) => {
       title: project ? project?.title : "",
       file: [],
       responsibilities: project ? project?.responsibilities : "",
-      tags: project ? project.tags.join(",") : "",
+      tags: project ? project?.tags.join(",") : "",
     },
   });
 
