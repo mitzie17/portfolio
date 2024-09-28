@@ -1,5 +1,5 @@
 import { ID, Query } from "appwrite";
-import { INewProject, INewUser } from "@/types";
+import { INewProject, INewUser, IUpdateProject } from "@/types";
 import { account, appwriteConfig, avatars, databases, storage } from "./config";
 
 export async function createUserAccount(user: INewUser) {
@@ -194,7 +194,6 @@ export async function getRecentProjects() {
     appwriteConfig.projectCollectionId,
     [Query.orderDesc("$createdAt"), Query.limit(20)]
   );
-
   if (!projects) throw Error;
 
   return projects;
@@ -212,6 +211,107 @@ export async function likeProject(projectId: string, likesArray: string[]) {
     if (!updatedProject) throw Error;
 
     return updatedProject;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getProjectById(projectId?: string) {
+  if (!projectId) throw Error;
+
+  try {
+    const project = await databases.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.projectCollectionId,
+      projectId
+    );
+
+    if (!project) throw Error;
+
+    return project;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function updateProject(project: IUpdateProject) {
+  const hasFileToUpdate = project.file.length > 0;
+
+  try {
+    let image = {
+      imageUrl: project.imageUrl,
+      imageId: project.imageId,
+    };
+
+    if (hasFileToUpdate) {
+      // Upload new file to appwrite storage
+      const uploadedFile = await uploadFile(project.file[0]);
+      if (!uploadedFile) throw Error;
+
+      // Get new file url
+      const fileUrl = getFilePreview(uploadedFile.$id);
+      if (!fileUrl) {
+        await deleteFile(uploadedFile.$id);
+        throw Error;
+      }
+
+      image = { ...image, imageUrl: fileUrl, imageId: uploadedFile.$id };
+    }
+
+    // Convert tags into array
+    const tags = project.tags?.replace(/ /g, "").split(",") || [];
+
+    //  Update project
+    const updatedProject = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.projectCollectionId,
+      project.projectId,
+      {
+        title: project.title,
+        imageUrl: image.imageUrl,
+        imageId: image.imageId,
+        responsibilities: project.responsibilities,
+        tags: tags,
+      }
+    );
+
+    // Failed to update
+    if (!updatedProject) {
+      // Delete new file that has been recently uploaded
+      if (hasFileToUpdate) {
+        await deleteFile(image.imageId);
+      }
+
+      // If no new file uploaded, just throw error
+      throw Error;
+    }
+
+    // Safely delete old file after successful update
+    if (hasFileToUpdate) {
+      await deleteFile(project.imageId);
+    }
+
+    return updatedProject;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function deleteProject(projectId?: string, imageId?: string) {
+  if (!projectId || !imageId) return;
+
+  try {
+    const statusCode = await databases.deleteDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.projectCollectionId,
+      projectId
+    );
+
+    if (!statusCode) throw Error;
+
+    await deleteFile(imageId);
+
+    return { status: "Ok" };
   } catch (error) {
     console.log(error);
   }
