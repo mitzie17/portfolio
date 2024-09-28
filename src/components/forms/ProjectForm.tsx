@@ -19,7 +19,11 @@ import { Models } from "appwrite";
 import { useUserContext } from "@/context/AuthContext";
 import { useToast } from "../ui/use-toast";
 import { useNavigate } from "react-router-dom";
-import { useCreateProjectMutation } from "@/lib/react-query/queriesAndMutations";
+import {
+  useCreateProjectMutation,
+  useUpdateProjectMutation,
+} from "@/lib/react-query/queriesAndMutations";
+import Loader from "../shared/Loader";
 
 type ProjectFormProps = {
   project?: Models.Document;
@@ -33,6 +37,9 @@ const ProjectForm = ({ project, action }: ProjectFormProps) => {
 
   const { mutateAsync: createProject, isPending: isLoadingCreate } =
     useCreateProjectMutation();
+
+  const { mutateAsync: updateProject, isPending: isLoadingUpdate } =
+    useUpdateProjectMutation();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof ProjectValidationSchema>>({
@@ -49,6 +56,18 @@ const ProjectForm = ({ project, action }: ProjectFormProps) => {
   async function onSubmit(values: z.infer<typeof ProjectValidationSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    if (project && action === "Update") {
+      const updatedProject = await updateProject({
+        ...values,
+        projectId: project.$id,
+        imageId: project?.imageId,
+        imageUrl: project?.imageUrl,
+      });
+      if (!updatedProject) {
+        toast({ title: "Unable to update. Please try again." });
+      }
+      return navigate(`/projects/${project.$id}`);
+    }
 
     const newProject = await createProject({
       ...values,
@@ -138,14 +157,20 @@ const ProjectForm = ({ project, action }: ProjectFormProps) => {
           )}
         />
         <div className="flex gap-4 items-center justify-end">
-          <Button type="button" className="shad-button_dark_4">
+          <Button
+            type="button"
+            className="shad-button_dark_4"
+            onClick={() => navigate(-1)}
+          >
             Cancel
           </Button>
           <Button
             type="submit"
             className="shad-button_primary whitespace-nowrap"
+            disabled={isLoadingCreate || isLoadingUpdate}
           >
-            Submit
+            {(isLoadingCreate || isLoadingUpdate) && <Loader />}
+            {action} Project
           </Button>
         </div>
       </form>
