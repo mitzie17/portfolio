@@ -1,7 +1,8 @@
+import { Models } from "appwrite";
+
 import Loader from "@/components/shared/Loader";
 import ProjectCard from "@/components/shared/ProjectCard";
 import { useGetRecentProjectsMutation } from "@/lib/react-query/queriesAndMutations";
-import { Models } from "appwrite";
 
 export const Home = () => {
   const {
@@ -14,13 +15,15 @@ export const Home = () => {
     <div className="flex flex-1">
       <div className="home-container">
         <div className="home-posts">
-          <h2 className="n3-bold md:h2-bold text-left w-full">Home Feed</h2>
+          <h2 className="h3-bold md:h2-bold text-left w-full">Home Feed</h2>
           {isProjectLoading && !projects ? (
             <Loader />
           ) : (
-            <ul className="flex flex-col flex-1 gap-9 w-full">
+            <ul className="flex flex-col flex-1 gap-9 w-full ">
               {projects?.documents.map((project: Models.Document) => (
-                <ProjectCard key={project.$id} project={project} />
+                <li key={project.$id} className="flex justify-center w-full">
+                  <ProjectCard project={project} />
+                </li>
               ))}
             </ul>
           )}
